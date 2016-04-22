@@ -86,7 +86,7 @@ plt.xlabel('z')
 plt.ylabel('$\phi (z)$')
 plt.show()
 
-#-------------------------------------------------------------------------------------------------------------#
+#---------------------Training a logistic regression model with scikit-learn--------------------#
 from sklearn.linear_model import LogisticRegression
 lr = LogisticRegression(C=1000.0, random_state=0)
 lr.fit(X_train_std, y_train)
