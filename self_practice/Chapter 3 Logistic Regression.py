@@ -11,6 +11,10 @@ from sklearn.cross_validation import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
 
 from sklearn.preprocessing import StandardScaler
+
+# class sklearn.preprocessing.StandardScaler(copy=True, with_mean=True, with_std=True)
+# Standardize features by removing the mean and scaling to unit variance
+
 sc = StandardScaler()
 sc.fit(X_train)
 X_train_std = sc.transform(X_train)
@@ -88,10 +92,12 @@ plt.show()
 
 #---------------------Training a logistic regression model with scikit-learn--------------------#
 from sklearn.linear_model import LogisticRegression
+
 lr = LogisticRegression(C=1000.0, random_state=0)
 lr.fit(X_train_std, y_train)
 
-plot_decision_regions(X_combined_std, y_combined, classifier=lr, test_idx=range(105, 150))   # defined in Chapter 2
+plot_decision_regions(X_combined_std, y_combined, classifier=lr, test_idx=range(105, 150))
+# defined in as above
 plt.xlabel('petal length [standardized]')
 plt.ylabel('petal width [standardized]')
 plt.legend(loc='upper left')
