@@ -1,3 +1,4 @@
+# -*- coding: cp1252 -*-
 # Chapter 3
 from sklearn import datasets
 import numpy as np
@@ -21,15 +22,17 @@ X_test_std = sc.transform(X_test) # perform standardization by centering and sca
 from sklearn.linear_model import Perceptron
 
 ppn = Perceptron(n_iter=40, eta0=0.1, random_state=0) # Check source code of Perceptron
-                                                                                     # Why return void.
+                                                                                                   # Why return void.
 ppn.fit(X_train_std, y_train)
 
 y_pred = ppn.predict(X_test_std)
 print 'Misclassified samples: %d' % (y_test != y_pred).sum()
 
+
 # calculate the classification accuracy of the perceptron on the test set as follows:
 from sklearn.metrics import accuracy_score
 print 'Accuracy: %.2f' % accuracy_score(y_test, y_pred)
+
 
 from matplotlib.colors import ListedColormap
 import matplotlib.pyplot as plt
@@ -58,22 +61,24 @@ def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
         X_test, y_test = X[test_idx, :], y[test_idx]
         plt.scatter(X_test[:, 0], X_test[:, 1], c='', alpha=1.0, linewidth=1, marker='o', s=55, label='test set')
 
-X_combined_std = np.vstack((X_train_std, X_test_std)) # Stack arrays in sequence horizontally (column wise).
-y_combined = np.hstack((y_train, y_test)) # Stack arrays in sequence vertically (row wise).
+# Specify the indices of the samples that we want to mark on the resulting plots.
+X_combined_std = np.vstack((X_train_std, X_test_std))
+y_combined = np.hstack((y_train, y_test))
 plot_decision_regions(X=X_combined_std, y=y_combined, classifier=ppn, test_idx=range(105, 150))
-#######################Example ################################
+#####################Example of hstack and vstack##################
 a = np.array([[1], [2], [3]])
 b = np.array([[2], [3], [4]])
 np.vstack((a,b))
 #array([[1], [2], [3], [2], [3], [4]])
 np.hstack((a,b))
-#array([[1, 2], [2, 3],[3, 4]])
+#array([[1, 2], [2, 3], [3, 4]])
 ##############################################################
 
 plt.xlabel('petal length [standardized]')
 plt.ylabel('petal width [standardized]')
 plt.legend(loc='upper left')
 plt.show()
+# The three flower classes can not be perfectly separated by a linear decision boundaries.
 
 #############Modeling class probabilities via logistic regression###############
 ''' Plot the sigmoid function for some values in the range -7 to 7 to see what it looks like '''
@@ -86,25 +91,44 @@ def sigmoid(z):
 z = np.arange(-7, 7, 0.1)
 phi_z = sigmoid(z)
 plt.plot(z, phi_z)
-plt.axvline(0.0, color='k')
+plt.axvline(0, color='k')
+# Add a vertical line across the axes.
+# axvline(x=0, ymin=0, ymax=1, hold=None, **kwargs)
+
 plt.axhspan(0.0, 1.0, facecolor='1.0', alpha=1.0, ls='dotted')
+# Add a horizontal span (rectangle) across the axis.
+# axhspan(ymin, ymax, xmin=0, xmax=1, **kwargs)
+# y coords are in data units and x coords are in axes(relative 0 - 1) units.
+# ls or linestyle:
+# [‘solid’ | ‘dashed’, ‘dashdot’, ‘dotted’ | (offset, on-off-dash-seq) | '-' | '--' | '-.' | ':' | 'None' | ' ' | '']
+# facecolor or fc:
+# mpl color spec, or None for default, or â€˜noneâ€™ for no color
+
 plt.axhline(y=0.5, ls='dotted', color='k')
+# Add a horizontal line across the axis.
+# axhline(y=0, xmin=0, xmax=1, hold=None, **kwargs)
+
 plt.yticks([0.0, 0.5, 1.0])
 plt.ylim(-0.1, 1.1)
 plt.xlabel('z')
 plt.ylabel('$\phi (z)$')
 plt.show()
+# We concluded that this sigmoid function take real number values as input and
+# transform them to values in range [0,1] with an intercept at phi ( z ) = 0.5 .
 
-#-------------------------------------------------------------------------------------------------------------#
+#---------------------Training a logistic regression model with scikit-learn--------------------#
 from sklearn.linear_model import LogisticRegression
+
 lr = LogisticRegression(C=1000.0, random_state=0)
 lr.fit(X_train_std, y_train)
 
-plot_decision_regions(X_combined_std, y_combined, classifier=lr, test_idx=range(105, 150))   # defined in Chapter 2
+plot_decision_regions(X_combined_std, y_combined, classifier=lr, test_idx=range(105, 150))
+# defined in as above
 plt.xlabel('petal length [standardized]')
 plt.ylabel('petal width [standardized]')
 plt.legend(loc='upper left')
 plt.show()
+
 
 # Predict the class-membership probability of the samples via the predict_proba method.
 # predict the probabilities of the first Iris-Setosa sample.
@@ -126,18 +150,5 @@ plt.legend(loc='upper left')
 plt.xscale('log')
 plt.show()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# As we can see in the resulting plot, the weight coefficients shrink if we decrease
+# the parameter C, that is, if we increase the regularization strength.
