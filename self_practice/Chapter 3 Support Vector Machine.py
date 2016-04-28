@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Maximum margin classification with support vector machines
 # Train a SVM model to classify the different flowers in our Iris dataset
 from sklearn import datasets
@@ -65,15 +66,19 @@ plt.show()
 
 # Alternative implementations in scikit-learn
 from sklearn.linear_model import SGDClassifier
-ppn = SGDClassifier(loss='perceptron')
-lr = SGDClassifier(loss='log')
-svm = SGDClassifier(loss='hinge')
+ppn = SGDClassifier(loss='perceptron') # perceptron
+lr = SGDClassifier(loss='log') # logistic regression
+svm = SGDClassifier(loss='hinge') # support vector machine
 
 # Solving nonlinear problems using a kernel SVM
-np.random.seed(0)
+np.random.seed(0) # called when RandomState is initialized. It can be called again to re-seed the generator
 X_xor = np.random.randn(200, 2)
-y_xor = np.logical_xor(X_xor[:, 0] > 0, X_xor[:, 1] > 0)
-y_xor = np.where(y_xor, 1, -1)
+#Return a sample (or samples) from the “standard normal” distribution
+# 200 rows, and 2 columns
+y_xor = np.logical_xor(X_xor[:, 0] > 0, X_xor[:, 1] > 0) 
+#Exclusive disjunction or exclusive or 
+# is a logical operation that outputs true only when inputs differ (one is true, the other is false).
+y_xor = np.where(y_xor, 1, -1) # if true, assign 1, if false, assign -1
 
 plt.scatter(X_xor[y_xor==1, 0], X_xor[y_xor==1, 1], c='b', marker='x', label='1')
 plt.scatter(X_xor[y_xor==-1, 0], X_xor[y_xor==-1, 1], c='r', marker='s', label='-1')
@@ -87,3 +92,24 @@ svm.fit(X_xor, y_xor)
 plot_decision_regions(X_xor, y_xor, classifier=svm)
 plt.legend(loc='upper left')
 plt.show()
+
+# Apply RBF kernel SVM to our Iris flower dataset
+svm = SVC(kernel='rbf', random_state=0, gamma=0.2, C=1.0)
+svm.fit(X_train_std, y_train)
+plot_decision_regions(X_combined_std, y_combined, classifier=svm, test_idx=range(105, 150))
+plt.xlabel('petal length [standardized]')
+plt.ylabel('petal width [standardized]')
+plt.legend(loc='upper left')
+plt.show()
+
+# Increase the value of gamma, and observe the effect on the decision boundary:
+svm = SVC(kernel='rbf', random_state=0, gamma=100.0, C=1.0)
+svm.fit(X_train_std, y_train)
+plot_decision_regions(X_combined_std, y_combined, classifier=svm)
+plt.xlabel('petal length [standardized]')
+plt.ylabel('petal width [standardized]')
+plt.legend(loc='upper left')
+plt.show()
+
+# Risk of overfitting though
+
