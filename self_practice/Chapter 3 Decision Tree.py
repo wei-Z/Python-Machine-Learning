@@ -18,7 +18,7 @@ def entropy(p):
 def error(p):
     return 1 - np.max([p, 1 - p])
     
-x  = np.arange(0.0, 1.0, 0.01)
+x = np.arange(0.0, 1.0, 0.01)
 ent = [entropy(p) if p != 0 else None for p in x]
 sc_ent = [e*0.5 if e else None for e in ent]
 err = [error(i) for i in x]
