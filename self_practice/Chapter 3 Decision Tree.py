@@ -37,14 +37,14 @@ plt.ylabel('Impurity Index')
 plt.show()
 
 # Building a decision tree
+'''
+Decision trees can build complex decision boundaries by dividing the feature
+space into rectangles. Using scikit-learn, we will now train a decision tree with
+a maximum depth of 3 using entropy as a criterion for impurity.  Although feature
+scaling may be desired for visualization purposes, note that feature scaling is
+not a requirement for decision tree algorithms.
  '''
- Decision trees can build complex decision boundaries by dividing the feature
- space into rectangles. Using scikit-learn, we will now train a decision tree with
- a maximum depth of 3 using entropy as a criterion for impurity.  Although feature
- scaling may be desired for visualization purposes, note that feature scaling is
- not a requirement for decision tree algorithms.
- '''
-# Train a SVM model to classify the different flowers in our Iris dataset
+# Train a  model to classify the different flowers in our Iris dataset
 from sklearn import datasets
 import numpy as np
 
@@ -98,3 +98,39 @@ plt.xlabe('petal length [cm]')
 plt.ylabel('petal width [cm]')
 plt.legend(loc='upper left')
 plt.show()
+
+'''
+A nice feature in scikit-learn is that is allows us to export the decision tree as a 
+.dot file after training, which we can visualize using the GraphViz program. 
+First, we create the .dot file via scikit-learn using the export_graphviz function
+from the tree submodule, as follows:
+'''
+from sklearn.tree import export_graphviz
+export_graphviz(tree, out_file='C:\Users\Wei\Desktop/tree.dot', feature_names=['petal length', 'petal width'])
+
+'''
+After installed GraphViz on the computer, we can convert the tree.dot file into a PNG file
+by executing the following command from the command line in the location where we 
+saved the tree.dot file:
+
+> dot -Tpng tree.dot -o tree.png
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
