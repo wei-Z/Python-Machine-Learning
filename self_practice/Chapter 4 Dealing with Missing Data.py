@@ -56,6 +56,90 @@ imr = Imputer(missing_values='NaN', strategy='mean', axis=0)
 imr = imr.fit(df)
 imputed_data = imr.transform(df.values)
 imputed_data
+# We replaced each NaN value by the corresponding mean, which is separetely calculated for each 
+# feature column. If we changed the setting axis=0 to axis=1, we'd calculate the row means.
+# Other options for the strategy parameter are median or most_frequent, where the later replaces
+# the missing values by the most frequent values.
+
+# Handling categorical data
+''' Create new data frame with categorical data '''
+import pandas as pd
+df = pd.DataFrame([
+                             ['green', 'M', 10.1, 'class1'],
+                             ['red', 'L', 13.5, 'class2'],
+                             ['blue', 'XL', 15.3, 'class1']])
+df.columns = ['color', 'size', 'price', 'classlabel']
+df
+
+# Mapping ordinal features
+size_mapping = {
+                        'XL': 3,
+                        'L': 2,
+                        'M': 1}
+
+df['size'] = df['size'].map(size_mapping)
+df
+'''
+We can simply define a reverse-mapping dictionary 
+inv_size_mapping = {v: k for k, v in size_mapping.items()}
+
+'''
+
+# Encoding class labels
+import numpy as np
+class_mapping = {label: idx for idx, label in enumerate(np.unique(df['classlabel']))}
+class_mapping
+
+df['classlabel']= df['classlabel'].map(class_mapping)
+df
+'''
+We can reverse the key-value pairs in the mapping directionary as follows to map the
+converted class labels back to the original string representation:
+    '''
+inv_class_mapping = {v: k for k, v in class_mapping.items()}
+df['classlabel'] = df['classlabel'].map(inv_class_mapping)
+df
+
+'''
+Alternatively, there is a convenient LabelEncoder class directly implemented in scikit-learn
+to achieve the same:
+
+'''
+from sklearn.preprocessing import LabelEncoder
+class_le = LabelEncoder()
+y = class_le.fit_transform(df['classlabel'].values)
+y
+
+class_le.inverse_transform(y)
+
+# Performing one-hot encoding on nominal features
+X = df[['color', 'size', 'price']].values
+color_le = LabelEncoder()
+X[:, 0] = color_le.fit_transform(X[:, 0]).astype(int)
+X
+
+from sklearn.preprocessing import OneHotEncoder
+
+'''
+ohe = OneHotEncoder(categorical_features=[0])
+ohe.fit_transform(X).toarray() # TypeError: no supported conversion for types: (dtype('float64'), dtype('O')) 
+
+'''
+ohe = OneHotEncoder(categorical_features = [0], sparse=False) # This one works
+ohe.fit_transform(X)
+
+'''
+An even more convenient way to create those dmmy features via one-hot encoding is to use 
+the get_dummies method implemented in pandas. Applied on a DataFrame, the get_dummies 
+method will only convert string columns and leave all other columns unchanged:
+
+'''
+pd.get_dummies(df[['price', 'color', 'size']])
+
+
+
+
+
 
 
 
