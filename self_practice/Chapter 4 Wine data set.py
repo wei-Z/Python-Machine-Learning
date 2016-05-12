@@ -27,3 +27,31 @@ mms = MinMaxScaler()
 stdsc = StandardScaler()
 mms.fit_transform(x)
 stdsc.fit_transform(x)
+
+# There are two common approaches to bringing different features onto the same scale:
+# normalization and standardization.
+from sklearn.preprocessing import MinMaxScaler
+mms = MinMaxScaler()
+X_train_norm = mms.fit_transform(X_train)
+X_test_norm = mms.transform(X_test)
+
+from sklearn.precessing import StandardScaler
+stdsc = StandardScaler()
+X_train_std = stdsc.fit_transform(X_train)
+X_test_std = stdsc.transform(X_test)
+
+# Selecting meaningful features
+'''
+A reason for overfitting is that our model is too complex for the given training data
+and common colutions to reduce  the generalization error are listed as follows:
+. Collect more training data
+. Introduce a penalty for complexity via regularization
+. Choose a simpler model with fewer parameters
+. Reduce the dimensionality of the data
+
+Common ways to reduce overfitting by regularization and dimensionality reduction
+via feature selection.
+
+'''
+
+# Sparse solutions with L1 regularization
