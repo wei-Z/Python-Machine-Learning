@@ -120,5 +120,26 @@ The resulting plot provides us with further insights about the behavior of L1 re
 As we can see, all features weights will be zero if we penalizethe model with a strong 
 regularization parameter(C<0.1); C is the inverse of the regularization parameter lambda.
 '''
+# Accesing feature importance with random forests
+from sklearn.ensemble import RandomForestClassifier
+feat_labels = df_wine.columns[1:]
+forest = RandomForestClassifier(n_estimators=10000, random_state=0, n_jobs=-1 )
+forest.fit(X_train, y_train)
+importances = forest.feature_importances_
+indices = np.argsort(importances)[::-1]
+
+for f in range(X_train.shape[1]):
+    print "%2d) %-*s %f" % (f + 1, 30, feat_labels[indices[f]], importances[indices[f]])
+    
+plt.title('Feature Importances')
+plt.bar(range(X_train.shape[1]), importances[indices], color='lightblue', align='center')
+plt.xticks(range(X_train.shape[1]), feat_labels[indices], rotation=90)
+plt.xlim(-1, X_train.shape[1])
+plt.tight_layout()
+plt.show()
+
+X_selected = forest.transform(X_train, threshold=0.15)
+X_selected.shape
+
 
     
