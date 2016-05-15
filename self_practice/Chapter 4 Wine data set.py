@@ -3,14 +3,14 @@ import numpy as np
 # Partitioning a dataset in training and test sets
 df_wine = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data', header=None)
 df_wine.columns=['Class label', 'Alcohol',
-                          'Malic acid', 'Ash',
-                          'Alcalinity of ash', 'Magnesium',
-                          'Total phenols', 'Flavanoids',
-                          'Nonflavanoid phenols',
-                          'Proanthocyanins',
-                          'Color intensity', 'Hue',
-                          'OD280/OD315 of diluted wines',
-                          'Proline']
+                                 'Malic acid', 'Ash',
+                                 'Alcalinity of ash', 'Magnesium',
+                                 'Total phenols', 'Flavanoids',
+                                 'Nonflavanoid phenols',
+                                 'Proanthocyanins',
+                                 'Color intensity', 'Hue',
+                                 'OD280/OD315 of diluted wines',
+                                 'Proline']
 print 'Class labels', np.unique(df_wine['Class label'])
 
 df_wine.head()
@@ -91,9 +91,9 @@ fig = plt.figure()
 ax = plt.subplot(111)
 
 colors = ['blue', 'green', 'red', 'cyan',
-              'magenta', 'yellow', 'black',
-              'pink', 'lightgreen', 'lightblue',
-              'gray', 'indigo', 'orange']
+                'magenta', 'yellow', 'black',
+                'pink', 'lightgreen', 'lightblue',
+                'gray', 'indigo', 'orange']
 
 weights, params = [], []
 for c in np.arange(-4, 6):
@@ -205,7 +205,8 @@ print 'Training accuracy: ', knn.score(X_train_std, y_train)
 print 'Test accuracy: ', knn.score(X_test_std, y_test)
 
 '''
-Now let's use the selected 5-feature subset and see how well KNN performs'''
+Now let's use the selected 5-feature subset and see how well KNN performs
+'''
 knn.fit(X_train_std[:, k5], y_train)
 print 'Training accuracy: ', knn.score(X_train_std[:, k5], y_train)
 print 'Test accuracy: ', knn.score(X_test_std[:, k5], y_test)
