@@ -131,7 +131,7 @@ from sklearn.metrics import accuracy_score
 class SBS():
     def __init__(self, estimator, k_features, scoring=accuracy_score, test_size=0.25, random_state=1):
         self.scoring = scoring
-        self.estimator = clone(estimator)
+        self.estimator = clone(estimator) # copy
         self.k_features = k_features
         self.test_size = test_size
         self.random_state = random_state
@@ -139,9 +139,9 @@ class SBS():
     def fit(self, X, y):
         X_train, X_test, y_train, y_test =  \
                     train_test_split(X, y, test_size=self.test_size, random_state=self.random_state)
-        dim = X_train.shape[1]
-        self.indices_ = tuple(range(dim))
-        self.subsets_ = [self.indices_]
+        dim = X_train.shape[1] #the following calculations are for the situation where dim = self.k_features
+        self.indices_ = tuple(range(dim)) # (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+        self.subsets_ = [self.indices_] # [(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)]
         score = self._calc_score(X_train, y_train, X_test, y_test, self.indices_)
         self.scores_ = [score]
 
@@ -153,21 +153,21 @@ class SBS():
                 score = self._calc_score(X_train, y_train, X_test, y_test, p)
                 scores.append(score)
                 subsets.append(p)
-
-            best = np.argmax(scores)
-            self.indices_ = subsets[best]
-            self.subsets_.append(self.indices_)
+            # for each value of dim, the index and score for larget score combination will be pushed to self.indices_,self.score_
+            best = np.argmax(scores) # find the index with largest score
+            self.indices_ = subsets[best] # find the combination index for the largest score
+            self.subsets_.append(self.indices_) # push the index combination into self.subsets
             dim -= 1
 
-            self.scores_.append(scores[best])
-        self.k_score_ = self.scores_[-1]
+            self.scores_.append(scores[best]) # push the largest score to self.scores_
+        self.k_score_ = self.scores_[-1] # the score based on k_features 
 
         return self
 
     def transform(self, X):
         return X[:, self.indices]
 
-    def _calc_score(self, X_train, y_train, X_test, y_test, indices):
+    def _calc_score(self, X_train, y_train, X_test, y_test, indices): # score calculation
         self.estimator.fit(X_train[:, indices], y_train)
         y_pred = self.estimator.predict(X_test[:, indices])
         score = self.scoring(y_test, y_pred)
@@ -179,10 +179,10 @@ Let's see our SBS implementation in action using the KNN classification from sci
 from sklearn.neighbors import KNeighborsClassifier
 import matplotlib.pyplot as plt
 knn = KNeighborsClassifier(n_neighbors=2)
-sbs = SBS(knn, k_features=1)
+sbs = SBS(knn, k_features=1) #number of features from 13 to 1 
 sbs.fit(X_train_std, y_train)
 
-k_feat = [len(k) for k in sbs.subsets_]
+k_feat = [len(k) for k in sbs.subsets_] # we only care about how many features used during plot
 plt.plot(k_feat, sbs.scores_, marker='o')
 plt.ylim([0.7, 1.1])
 plt.ylabel('Accuracy')
@@ -194,7 +194,7 @@ plt.show()
 To satisfy our own curiosity, let's see what those five features are that yielded such a
 good performance on the validation dataset:
 '''
-k5 = list(sbs.subsets_[8])
+k5 = list(sbs.subsets_[8]) # index is 8 for this list [13,12,11,10,9,8,7,6,5...]
 print df_wine.columns[1:][k5]
 
 '''
@@ -212,11 +212,11 @@ print 'Test accuracy: ', knn.score(X_test_std[:, k5], y_test)
 
 # Accesing feature importance with random forests
 from sklearn.ensemble import RandomForestClassifier
-feat_labels = df_wine.columns[1:]
+feat_labels = df_wine.columns[1:] # 0 index is y column
 forest = RandomForestClassifier(n_estimators=10000, random_state=0, n_jobs=-1 )
 forest.fit(X_train, y_train)
 importances = forest.feature_importances_
-indices = np.argsort(importances)[::-1]
+indices = np.argsort(importances)[::-1] # accending sort index, then change to decending index
 
 for f in range(X_train.shape[1]):
     print "%2d) %-*s %f" % (f + 1, 30, feat_labels[indices[f]], importances[indices[f]])
@@ -230,3 +230,35 @@ plt.show()
 
 X_selected = forest.transform(X_train, threshold=0.15)
 X_selected.shape
+
+#___________________________________________________________________#
+
+# numpy.argsort(a, axis=-1, kind='quicksort', order=None)
+'''
+Returns the indices that would sort an array.
+Perform an indirect sort along the given axis using the algorithm specified by the kind keyword. 
+It returns an array of indices of the same shape as a that index data along the given axis in sorted order.
+'''
+
+X_train.shape[1]
+#Out[7]: 13L
+X_train.shape
+#Out[8]: (124L, 13L)
+indices
+#Out: array([ 9, 12,  6, 11,  0, 10,  5,  3,  1,  8,  4,  7,  2], dtype=int64)
+importances[indices]
+#Out: 
+#array([ 0.18250763,  0.15857438,  0.15095391,  0.13198329,  0.10656371,
+#        0.07824855,  0.06071706,  0.03203891,  0.02538503,  0.02236895,
+#        0.02207032,  0.01465534,  0.01393292])
+
+
+#itertools.combinations(iterable, r)
+'''
+Return r length subsequences of elements from the input iterable. 
+So, if the input iterable is sorted, the combination tuples will be produced in sorted order.
+'''
+#numpy.argmax(a, axis=None, out=None)[source]
+'''
+Returns the indices of the maximum values along an axis.
+'''
