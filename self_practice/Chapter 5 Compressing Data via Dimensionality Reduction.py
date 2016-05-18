@@ -33,6 +33,108 @@ eigendecomposition that yielded a vector (eigen_vals) consisting of 13 eigenvalu
  and the corresponding eigenvectors stored as columns in a 13x13 -dimensional
  matrix (eigen_vecs).
 '''
+'''
+Since we want to reduce the dimensionality of our dataset by compressing it onto
+a new feature subspace, we only select the subset of the eigenvectors(principle 
+components) that contains most of the information (variance). Since the eigenvalues 
+define the magitude of the eigenvectors, we have to sort the eigenvalues by 
+decreasing magnitude; we are interested in the top k eigenvectors based on the 
+values of their corresponding eigenvalues. 
+But before we collect those k most informative eigenvectors, let's plot the variance
+explained ratios of the eigenvalues
+
+'''
+'''
+Using the NumPy cumsum function, we can then calculate the cumulative  sum of 
+explained variances, which we will plot via matplotlib's step function: '''
+tot = sum(eigen_vals)
+var_exp = [(i / tot) for i in sorted(eigen_vals, reverse=True)]
+cum_var_exp = np.cumsum(var_exp)
+
+import matplotlib.pyplot as plt
+plt.bar(range(1, 14), var_exp, alpha=0.5, align='center', label='individual explained variance')
+plt.step(range(1,14), cum_var_exp, where='mid', label='cumulative explained variance')
+plt.ylabel('Explained variance ratio')
+plt.xlabel('Principal components')
+plt.legend(loc='best')
+plt.show()
+
+'''
+The resulting plot indicates that the first principal component alone accounts for 
+40 percent of the variance. Also, we can see that the first two principal components
+combined explain almost 60 percent of the variance in the data:
+'''
+# Feature transformation
+# We start by sorting the eigenpairs by decreasing order of the eigenvalues:
+eigen_pairs = [(np.abs(eigen_vals[i]), eigen_vecs[:, i]) for i in range(len(eigen_vals))]
+eigen_pairs.sort(reverse=True)
+
+w = np.hstack((eigen_pairs[0][1][:, np.newaxis],
+                       eigen_pairs[1][1][:, np.newaxis]))
+print 'Matrix W: \n', w
+
+'''
+By executing the preceding code, we have created a 13x2-dimensional projection
+matrix w from the top two eigenvectors. Using the projection matrix, we can now
+transform a sample x (represented as 1x13-dimensional row vector) onto the PCA
+subspace obraining x', a now two-dimensional sample vector consisting of two new
+features:       x' = xW
+'''
+X_train_std[0].dot(w)
+# similarly, we can transform the entire 124 x 13-dimensional training dataset onto the two principal components
+# by calculating the matrix dot product:
+X_train_pca = X_train_std.dot(w)
+
+'''
+Lastly, let's visualize the transformed Wine training set, now stored as an 
+124 x 2-dimensional matrix, in a two-dimensional scatterplot:
+'''
+colors = ['r', 'b', 'g']
+markers = ['s', 'x', 'o']
+for l, c, m in zip(np.unique(y_train), colors, markers):
+    plt.scatter(X_train_pca[y_train==l, 0], X_train_pca[y_train==l, 1],c=c, label=1, marker = m)
+    
+plt.xlabel('PC 1')
+plt.ylabel('PC 2')
+plt.legend(loc='lower left')
+plt.show()
+
+# Principal component analysis in scikit-learn
+from Plot_Decision_Regions import plot_decision_regions
+from sklearn.linear_model import LogisticRegression
+from sklearn.decomposition import PCA
+pca = PCA(n_components=2)
+lr = LogisticRegression()
+X_train_pca = pca.fit_transform(X_train_std)
+X_test_pca = pca.transform(X_test_std)
+lr.fit(X_train_pca, y_train)
+plot_decision_regions(X_train_pca, y_train, classifier=lr)
+plt.xlabel('PC1')
+plt.ylabel('PC2')
+plt.legend(loc='lower left')
+plt.show()
+
+'''
+Let's plot the decision regions of the logistic regression on the transformed test 
+dataset to see if it can separate the classes well.
+'''
+plot_decision_regions(X_test_pca, y_test, classifier=lr)
+plt.xlabel('PC1')
+plt.ylabel('PC2')
+plt.legend(loc='lower left')
+plt.show()
+
+'''
+If we are interested in the explained variance ratios of the different principal 
+components, we can simply intialize the PCA class with the n_components parameter
+set to None, so all principal components are kept and the explained variance ratio can 
+then be accessed via the explained _variance_ratio_ attribute
+'''
+pca = PCA(n_components=None)
+X_train_pca = pca.fit_transform(X_train_std)
+pca.explained_variance_ratio_
+
+
 
 
 
