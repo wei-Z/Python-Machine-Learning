@@ -1,5 +1,5 @@
 # Chapter 5 Compressing Data via Dimensionality Reduction
-
+# Principal Components Analysis
 # Total and explained variance
 '''
 First, we will start by loading the Wine dataset that we have been working with
@@ -69,8 +69,8 @@ combined explain almost 60 percent of the variance in the data:
 eigen_pairs = [(np.abs(eigen_vals[i]), eigen_vecs[:, i]) for i in range(len(eigen_vals))]
 eigen_pairs.sort(reverse=True)
 
-w = np.hstack((eigen_pairs[0][1][:, np.newaxis],
-                       eigen_pairs[1][1][:, np.newaxis]))
+w = np.hstack((eigen_pairs[0][1][:, np.newaxis],   # eigen_pairs[0][1].shape =(13,)
+                       eigen_pairs[1][1][:, np.newaxis]))  # eigen_pairs[0][1][:, np.newaxis].shape= (13, 1)
 print 'Matrix W: \n', w
 
 '''
@@ -80,10 +80,10 @@ transform a sample x (represented as 1x13-dimensional row vector) onto the PCA
 subspace obraining x', a now two-dimensional sample vector consisting of two new
 features:       x' = xW
 '''
-X_train_std[0].dot(w)
+X_train_std[0].dot(w) # 1x13 13x2 = 1x2
 # similarly, we can transform the entire 124 x 13-dimensional training dataset onto the two principal components
 # by calculating the matrix dot product:
-X_train_pca = X_train_std.dot(w)
+X_train_pca = X_train_std.dot(w) # 124x13 13x2 = 124x2
 
 '''
 Lastly, let's visualize the transformed Wine training set, now stored as an 
@@ -103,7 +103,7 @@ plt.show()
 from Plot_Decision_Regions import plot_decision_regions
 from sklearn.linear_model import LogisticRegression
 from sklearn.decomposition import PCA
-pca = PCA(n_components=2)
+pca = PCA(n_components=2) # Number of components to keep. if n_components is not set all components are kept
 lr = LogisticRegression()
 X_train_pca = pca.fit_transform(X_train_std)
 X_test_pca = pca.transform(X_test_std)
@@ -134,6 +134,23 @@ pca = PCA(n_components=None)
 X_train_pca = pca.fit_transform(X_train_std)
 pca.explained_variance_ratio_
 
+'''
+From Wikipedia:
+The eigendecomposition of a symmetric positive semidefinite (PSD) matrix yields an 
+orthogonal basis of eigenvectors, each of which has a nonnegative eigenvalue. The 
+orthogonal decomposition of a PSD matrix is used in multivariate analysis, where the 
+sample covariance matrices are PSD. This orthogonal decomposition is called principal 
+components analysis (PCA) in statistics. PCA studies linear relations among variables. 
+PCA is performed on the covariance matrix or the correlation matrix (in which each 
+variable is scaled to have its sample variance equal to one). For the covariance or 
+correlation matrix, the eigenvectors correspond to principal components and the 
+eigenvalues to the variance explained by the principal components. Principal 
+component analysis of the correlation matrix provides an orthonormal eigen-basis for 
+the space of the observed data: In this basis, the largest eigenvalues correspond to 
+the principal components that are associated with most of the covariability among a 
+number of observed data.
+
+'''
 
 
 
