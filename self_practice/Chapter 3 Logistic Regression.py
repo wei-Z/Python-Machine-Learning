@@ -5,7 +5,7 @@ import numpy as np
 
 iris = datasets.load_iris()
 X = iris.data[:, [2, 3]]
-y = iris.target
+y = iris.target # 0-Iris-Setosa, 1-Iris-Versicolor, 2-Virginica
 
 from sklearn.cross_validation import train_test_split
 # random_state : int or RandomState
@@ -33,7 +33,7 @@ print 'Misclassified samples: %d' % (y_test != y_pred).sum()
 from sklearn.metrics import accuracy_score
 print 'Accuracy: %.2f' % accuracy_score(y_test, y_pred)
 
-
+# Plot the decision regions
 from matplotlib.colors import ListedColormap
 import matplotlib.pyplot as plt
 def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
