@@ -81,10 +81,30 @@ plt.show()
 # The three flower classes can not be perfectly separated by a linear decision boundaries.
 
 #############Modeling class probabilities via logistic regression###############
-''' Plot the sigmoid function for some values in the range -7 to 7 to see what it looks like '''
+#--------------------------Feel odds ratio and logit function------------------------------------------
 import matplotlib.pyplot as plt
 import numpy as np
+p = np.arange(0.01,1,0.01)
 
+def odds(x):
+    return x/(1-x)
+    
+import matplotlib.pyplot as plt
+plt.scatter(p, p/(1-p), c='g', marker='x')
+plt.xlabel('p')
+plt.ylabel('p/(1-p)')
+plt.show()
+
+def logit(x):
+    return np.log(x/(1-x))
+    
+plt.scatter(p, logit(p), c='r', marker='s')
+plt.xlabel('p')
+plt.ylabel('logit function')
+plt.show()
+
+#-----------------------------------------------------------------------------------------------#
+''' Plot the sigmoid function for some values in the range -7 to 7 to see what it looks like '''
 def sigmoid(z):
     return 1.0/(1.0 + np.exp(-z))
     
@@ -100,9 +120,9 @@ plt.axhspan(0.0, 1.0, facecolor='1.0', alpha=1.0, ls='dotted')
 # axhspan(ymin, ymax, xmin=0, xmax=1, **kwargs)
 # y coords are in data units and x coords are in axes(relative 0 - 1) units.
 # ls or linestyle:
-# [‘solid’ | ‘dashed’, ‘dashdot’, ‘dotted’ | (offset, on-off-dash-seq) | '-' | '--' | '-.' | ':' | 'None' | ' ' | '']
+# ['solid' | 'dashed', 'dashdot', 'dotted' | (offset, on-off-dash-seq) | '-' | '--' | '-.' | ':' | 'None' | ' ' | '']
 # facecolor or fc:
-# mpl color spec, or None for default, or â€˜noneâ€™ for no color
+# mpl color spec, or None for default, or 'none' for no color
 
 plt.axhline(y=0.5, ls='dotted', color='k')
 # Add a horizontal line across the axis.
