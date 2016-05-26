@@ -35,7 +35,7 @@ class Perceptron(object):
             self : object
             
         """
-        self.w_ = np.zeros(1 + X.shape[1]) # return zero array, X.shape[1] =2L, return array([0., 0., 0.])
+        self.w_ = np.zeros(1 + X.shape[1]) # return zero array, with number of features + 1 columns,  e.g.X.shape[1] =2L, return array([0., 0., 0.])
         self.errors_ = []
         for _ in range(self.n_iter):
             errors = 0
@@ -43,7 +43,7 @@ class Perceptron(object):
                 update = self.eta * (target - self.predict(xi))
                 self.w_[1:] += update * xi
                 self.w_[0] += update
-                errors += int(update != 0.0) # if update = 0.0, errors = 0; if update unequal 0.0, errors =1. 
+                errors += int(update != 0.0) # if update = 0.0, errors = errors; if update unequal 0.0, errors = errors+1.
             self.errors_.append(errors)
         return self
     
