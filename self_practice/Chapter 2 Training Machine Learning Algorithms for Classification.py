@@ -206,26 +206,27 @@ plt.show()
 # Large scale machine learning and stochastic gradient descent
 from numpy.random import seed
 class AdalineSGD(object):
-    """ADAptive LInear NEuron classifier.
-    #Parameters
-    #------------
-    #eta : float
-    #Learning rate (between 0.0 and 1.0)
-    #n_iter : int
-    #Passes over the training dataset.
-    #Attributes
-    #-----------
-    #w_ : 1d-array
-    #Weights after fitting.
-    #errors_ : list
-    #Number of misclassifications in every epoch.
-    #shuffle : bool (default: True)
-    #Shuffles training data every epoch
-    #if True to prevent cycles.
-    #random_state : int (default: None)
-    #Set random state for shuffling
-    #and initializing the weights.
-    #"""
+    """
+    ADAptive LInear NEuron classifier.
+    Parameters
+    ------------
+    eta : float
+    Learning rate (between 0.0 and 1.0)
+    n_iter : int
+    Passes over the training dataset.
+    Attributes
+    -----------
+    w_ : 1d-array
+    Weights after fitting.
+    errors_ : list
+    Number of misclassifications in every epoch.
+    shuffle : bool (default: True)
+    Shuffles training data every epoch
+    if True to prevent cycles.
+    random_state : int (default: None)
+    Set random state for shuffling
+    and initializing the weights.
+    """
     def __init__(self, eta=0.01, n_iter=10, shuffle=True, random_state=None):
         self.eta = eta
         self.n_iter = n_iter
@@ -235,17 +236,18 @@ class AdalineSGD(object):
             seed(random_state)
             
     def fit(self, X, y):
-        """Fit training data.
-        #Parameters
-        #----------
-        #X : {array-like}, shape = [n_samples, n_features]
-        #Training vectors, where n_samples
-        #is the number of samples and
-        #n_features is the number of features.
-        #y : array-like, shape = [n_samples]
-        #Target values.
-        #Returns
-        #-------"""
+        """
+        Fit training data.
+        Parameters
+        ----------
+        X : {array-like}, shape = [n_samples, n_features]
+        Training vectors, where n_samples
+        is the number of samples and
+        n_features is the number of features.
+        y : array-like, shape = [n_samples]
+        Target values.
+        Returns
+       """
         #self : object
         #
         self._initialize_weights(X.shape[1])
@@ -303,7 +305,8 @@ class AdalineSGD(object):
         return np.where(self.activation(X) >= 0.0, 1, -1)
 
 # We can then use the fit method to train the AdalineSGD classifier and use our
-# plot_decision_regions to plot our training results:            
+# plot_decision_regions to plot our training results:           
+from Plot_Decision_Regions import plot_decision_regions
 ada = AdalineSGD(n_iter=15, eta=0.01, random_state=1)
 ada.fit(X_std, y)
 plot_decision_regions(X_std, y, classifier=ada)
