@@ -25,3 +25,15 @@ pipe_lr.fit(X_train, y_train)
 print 'Test Accuracy: %.3f' % pipe_lr.score(X_test, y_test)
 
 # holdout cross-validation and k-fold cross-validation
+# K-fold cross-validation
+import numpy as np
+from sklearn.cross_validation import StratifiedKFold
+kfold = StratifiedKFold(y=y_train, n_folds=10, random_state=1)
+scores = [ ]
+for k, (train, test) in enumerate(kfold):
+    pipe_lr.fit(X_train[train], y_train[train])
+    score = pipe_lr.score(X_train[test], y_train[test])
+    scores.append(score)
+    print 'Fold: %s, Class dist.: %s, Acc: %.3f' % (k+1, np.bincount(y_train[train]), score)
+
+print 'CV accuracy: %.3f +/- %.3f' % (np.mean(scores), np.std(scores))
