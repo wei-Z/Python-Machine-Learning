@@ -97,6 +97,7 @@ gs = GridSearchCV(estimator=pipe_svc, param_grid=param_grid, scoring=scorer, cv=
 # Plotting a receiver operating characteristic(ROC curve)
 from sklearn.metrics import roc_curve, auc
 from scipy import interp
+from sklearn.cross_validation import StratifiedKFold
 pipe_lr = Pipeline([('scl', StandardScaler()),
                                  ('pca', PCA(n_components=2)),
                                  ('clf', LogisticRegression(penalty='l2', random_state=0, C=100.0))])
@@ -107,8 +108,7 @@ mean_tpr = 0.0
 mean_fpr = np.linspace(0, 1, 100)
 all_tpr = [ ]
 for i, (train, test) in enumerate(cv):
-    probas = pipe_lr.fit(X_train2[train]),
-    y_train[train].predict_proba(X_train2[test])
+    probas = pipe_lr.fit(X_train2[train],y_train[train]).predict_proba(X_train2[test])
     fpr, tpr, thresholds = roc_curve(y_train[test], probas[:, 1], pos_label=1)
     mean_tpr += interp(mean_fpr, fpr, tpr)
     mean_tpr[0] = 0.0
@@ -138,3 +138,20 @@ plt.ylabel('true positive rate')
 plt.title('Receiver Operator Characteristic')
 plt.legend(loc="lower right")
 plt.show()
+
+'''
+If we are just interested in ROC AUC score, we could also directly import the 
+roc_auc_score function from the sklearn.metrics submodule. The following code
+calculates the classifier's ROC AUC score on the independent test dataset after fitting 
+it on the two-feature training set: '''
+pipe_lr = pipe_lr.fit(X_train2, y_train)
+y_pred2 = pipe_lr.predict(X_test[:, [4,14]])
+
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import accuracy_score
+print 'ROC AUC: %.3f' % roc_auc_score(y_true=y_test, y_score=y_pred2)
+print 'Accuracy: %.3f' % accuracy_score(y_true=y_test, y_pred=y_pred2)
+
+# The scoring metrics for multiclass classification
+from sklearn.metrics import precision_score, make_scorer
+pre_scorer = make_scorer(score_func=precision_score, pos_label=1, greater_is_better=True, average='micro')
