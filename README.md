@@ -2,7 +2,7 @@
 
 Try to learn Python Machine Learning book by Sebastian Raschka everyday, step by step.
 
-**Chapter 1**: Giving Computers the Ability to Learn from Data
+**Chapter 1**: Giving Computers the Ability to Learn from Data<br>
 Chapter 2: Training Machine Learning Algorithms for Classification
 Chapter 3: A Tour of Machine Learning Classifiers Using Scikit-learn
 Chapter 4: Building Good Training Sets – Data Preprocessing
