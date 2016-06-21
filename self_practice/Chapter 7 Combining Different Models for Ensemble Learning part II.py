@@ -99,3 +99,11 @@ for idx, clf, tt in zip([0, 1], [tree, bag], ['Decision Tree', 'Bagging']):
 axarr[0].set_ylabel('Alcohol', fontsize=12)
 plt.text(10.2, -1.2, s='Hue', ha='center', va='center', fontsize=12)
 plt.show()
+'''
+We only looked at a very simple bagging example in this section. In practice, more
+complex classification tasks and datasets' high dimensionality can easily lead to
+overfitting in single decision trees and this is where the bagging algorithm can really
+play out its strengths. Finally, we shall note that the bagging algorithm can be an
+effective approach to reduce the variance of a model. However, bagging is ineffective
+in reducing model bias, which is why we want to choose an ensemble of classifiers
+with low bias, for example, unpruned decision tree. '''
