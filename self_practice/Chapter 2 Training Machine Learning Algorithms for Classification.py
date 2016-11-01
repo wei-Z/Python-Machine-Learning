@@ -1,3 +1,4 @@
+# Chapter 2 Training Machine Learning Algorithms for Classification
 import numpy as np
 class Perceptron(object):
     """Perceptron classifier.
